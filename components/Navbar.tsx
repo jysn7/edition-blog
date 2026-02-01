@@ -12,6 +12,12 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import Link from "next/link";
+import { 
+  SignInButton, 
+  UserButton, 
+  SignedIn, 
+  SignedOut 
+} from "@clerk/nextjs";
 
 export const Navbar = () => {
   const navItems = ["Writers"];
@@ -41,13 +47,28 @@ export const Navbar = () => {
           ))}
         </div>
 
-        {/* Desktop login */}
-        <Button
-          variant="outline"
-          className="hidden md:flex rounded-lg border-border h-9 px-4 text-[10px] uppercase font-bold tracking-widest hover:bg-secondary"
-        >
-          Login
-        </Button>
+        {/* Desktop login / Auth */}
+        <div className="hidden md:flex items-center gap-4">
+          <SignedOut>
+            <SignInButton mode="modal">
+              <Button
+                variant="outline"
+                className="rounded-lg border-border h-9 px-4 text-[10px] uppercase font-bold tracking-widest hover:bg-secondary"
+              >
+                Login
+              </Button>
+            </SignInButton>
+          </SignedOut>
+          <SignedIn>
+            <UserButton 
+              appearance={{
+                elements: {
+                  userButtonAvatarBox: "h-8 w-8 rounded-lg border border-border"
+                }
+              }}
+            />
+          </SignedIn>
+        </div>
 
         {/* Desktop theme toggle */}
         <div className="hidden md:block">
@@ -93,12 +114,23 @@ export const Navbar = () => {
 
               {/* Actions */}
               <div className="px-6 py-6 border-t border-border space-y-5">
-                <Button
-                  variant="outline"
-                  className="w-full rounded-lg h-10 text-[10px] uppercase font-bold tracking-widest hover:bg-secondary"
-                >
-                  Login
-                </Button>
+                <SignedOut>
+                  <SignInButton mode="modal">
+                    <Button
+                      variant="outline"
+                      className="w-full rounded-lg h-10 text-[10px] uppercase font-bold tracking-widest hover:bg-secondary"
+                    >
+                      Login
+                    </Button>
+                  </SignInButton>
+                </SignedOut>
+                
+                <SignedIn>
+                  <div className="flex items-center justify-between p-2 border border-border rounded-lg bg-secondary/20">
+                    <span className="text-[10px] font-black uppercase tracking-widest">Account</span>
+                    <UserButton />
+                  </div>
+                </SignedIn>
 
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
