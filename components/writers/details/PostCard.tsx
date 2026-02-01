@@ -30,33 +30,24 @@ export function PostCard({ post, authorName }: any) {
             {/* Content */}
             <div className="flex flex-col justify-between flex-1 min-w-0">
               <div className="space-y-1">
-                
-                {/* Meta */}
                 <div className="flex items-center gap-2 text-[10px] uppercase font-bold tracking-tight text-muted-foreground">
                   <span className="text-primary">
                     {new Date(post.publishedAt).getFullYear()}
                   </span>
                   <span className="h-1 w-1 rounded-full bg-border" />
                   <span className="truncate">{authorName}</span>
-                </div>
-
-                
+                </div>            
                 <h3 className="font-black text-sm md:text-base uppercase tracking-tight truncate group-hover:text-primary transition-colors">
                   {post.title}
-                </h3>
-
-                
+                </h3>         
                 <p className="text-muted-foreground text-xs line-clamp-1 font-medium">
                   {post.excerpt}
                 </p>
-              </div>
-
-              
+              </div>      
               <div className="flex items-center justify-between pt-2">
                 <span className="text-[10px] font-black uppercase tracking-widest opacity-60 group-hover:opacity-100">
                   Read Entry
                 </span>
-
                 <ArrowUpRight className="h-4 w-4 opacity-40 group-hover:opacity-100 transition-all" />
               </div>
             </div>

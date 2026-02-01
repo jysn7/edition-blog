@@ -5,7 +5,7 @@ export function PostsGrid({ posts, authorName }: any) {
     return (
       <div className="py-32 text-center">
         <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/30">
-          No indexed entries for this profile.
+          No entries for this profile.
         </p>
       </div>
     );
