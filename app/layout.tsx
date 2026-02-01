@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "EDITION // ARCHIVE",
+  title: "EDITION",
   description: "A decentralized editorial system and cultural bibliography.",
 };
 
