@@ -3,13 +3,12 @@ import { headers } from 'next/headers'
 import { WebhookEvent } from '@clerk/nextjs/server'
 import { createClient } from 'next-sanity'
 
-// Dedicated admin client for backend write operations
 const adminClient = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
   apiVersion: '2024-01-01',
-  useCdn: false, 
-  token: process.env.SANITY_WRITE_TOKEN, 
+  useCdn: false,
+  token: process.env.SANITY_WRITE_TOKEN,
 })
 
 export async function POST(req: Request) {
@@ -20,7 +19,6 @@ export async function POST(req: Request) {
     return new Response('Error: Missing webhook secret', { status: 500 })
   }
 
-  // Get the headers for Svix verification
   const headerPayload = await headers();
   const svix_id = headerPayload.get("svix-id");
   const svix_timestamp = headerPayload.get("svix-timestamp");
@@ -30,14 +28,11 @@ export async function POST(req: Request) {
     return new Response('Error: Missing svix headers', { status: 400 })
   }
 
-  // Get the body
   const payload = await req.json()
   const body = JSON.stringify(payload);
-
   const wh = new Webhook(WEBHOOK_SECRET);
   let evt: WebhookEvent
 
-  // Verify the payload
   try {
     evt = wh.verify(body, {
       "svix-id": svix_id,
@@ -54,20 +49,35 @@ export async function POST(req: Request) {
   // 1. HANDLE USER CREATION
   if (eventType === 'user.created') {
     const { id, first_name, last_name, image_url, email_addresses } = evt.data;
-    
     const name = `${first_name || ""} ${last_name || ""}`.trim() || "New Writer";
     const slugValue = (email_addresses[0]?.email_address.split('@')[0] || id).toLowerCase();
 
     try {
-      // createIfNotExists prevents 409 Conflict errors if Clerk retries the webhook
+      // Step A: Upload the Clerk image URL to Sanity as an asset
+      let imageAsset = null;
+      if (image_url) {
+        const response = await fetch(image_url);
+        const buffer = await response.arrayBuffer();
+        imageAsset = await adminClient.assets.upload('image', Buffer.from(buffer), {
+          filename: `avatar-${id}`,
+        });
+      }
+
+      // Step B: Create the Author document with a proper image reference
       await adminClient.createIfNotExists({
         _type: 'author',
-        _id: `author-${id}`, 
+        _id: `author-${id}`,
         name: name,
         slug: { _type: 'slug', current: slugValue },
-        image: image_url,
         role: 'Contributor',
-        // Providing a basic block structure prevents Studio from crashing on empty content
+        // Important: Formatting the image object to match Sanity's 'image' type
+        image: imageAsset ? {
+          _type: 'image',
+          asset: {
+            _type: "reference",
+            _ref: imageAsset._id
+          }
+        } : undefined,
         bio: [
           {
             _key: 'initial',
@@ -75,9 +85,9 @@ export async function POST(req: Request) {
             children: [{ _type: 'span', text: 'New contributor archive.' }],
             style: 'normal',
           },
-        ], 
+        ],
       });
-      
+
       return new Response('User created in Sanity', { status: 201 })
     } catch (err) {
       console.error('Sanity Create Error:', err)
@@ -85,20 +95,35 @@ export async function POST(req: Request) {
     }
   }
 
-  // 2. HANDLE USER UPDATES (Keep names/images in sync)
+  // 2. HANDLE USER UPDATES
   if (eventType === 'user.updated') {
     const { id, first_name, last_name, image_url } = evt.data;
     const name = `${first_name || ""} ${last_name || ""}`.trim();
 
     try {
+      let imageUpdate = {};
+      
+      // If image changed, upload the new one
+      if (image_url) {
+        const response = await fetch(image_url);
+        const buffer = await response.arrayBuffer();
+        const asset = await adminClient.assets.upload('image', Buffer.from(buffer));
+        imageUpdate = {
+          image: {
+            _type: 'image',
+            asset: { _type: 'reference', _ref: asset._id }
+          }
+        };
+      }
+
       await adminClient
         .patch(`author-${id}`)
         .set({
           name: name,
-          image: image_url,
+          ...imageUpdate
         })
         .commit();
-        
+
       return new Response('User updated in Sanity', { status: 200 })
     } catch (err) {
       console.error('Sanity Update Error:', err)
