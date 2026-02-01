@@ -1,6 +1,6 @@
 import { groq } from "next-sanity";
 
-// Fragment for reusable Post fields to keep code DRY
+// Fragment for reusable Post fields
 const postFields = groq`
   _id,
   title,
@@ -10,6 +10,7 @@ const postFields = groq`
   publishedAt,
   "mainImage": mainImage.asset->url,
   "author": author->{
+    _id,
     name,
     role,
     socialHandle,
@@ -20,6 +21,18 @@ const postFields = groq`
     "slug": slug.current,
     color
   }
+`;
+
+// Fragment for detailed Author fields
+const authorFields = groq`
+  _id,
+  name,
+  "slug": slug.current,
+  "image": image.asset->url,
+  role,
+  bio,
+  socialHandle,
+  "postCount": count(*[_type == "post" && author._ref == ^._id])
 `;
 
 // 1. Fetch all posts for the feed (ordered by date)
@@ -36,7 +49,7 @@ export const featuredPostQuery = groq`
   }
 `;
 
-// 3. Fetch a single post by slug (for the individual post page)
+// 3. Fetch a single post by slug
 export const postBySlugQuery = groq`
   *[_type == "post" && slug.current == $slug][0] {
     ${postFields},
@@ -50,5 +63,22 @@ export const categoriesQuery = groq`
     title,
     "slug": slug.current,
     color
+  }
+`;
+
+// 5. Fetch all authors for the Writers Directory
+export const authorsQuery = groq`
+  *[_type == "author"] | order(name asc) {
+    ${authorFields}
+  }
+`;
+
+// 6. Fetch a single author by slug (for profile pages)
+export const authorBySlugQuery = groq`
+  *[_type == "author" && slug.current == $slug][0] {
+    ${authorFields},
+    "posts": *[_type == "post" && references(^._id)] | order(publishedAt desc) {
+      ${postFields}
+    }
   }
 `;
