@@ -26,7 +26,7 @@ export const FeedSidebar = ({ authors, recentPosts }: { authors: any[], recentPo
                     src={author.image} 
                     alt={author.name} 
                     fill 
-                    className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500" 
+                    className="object-cover transition-all duration-500" 
                   />
                 )}
               </div>
@@ -40,7 +40,7 @@ export const FeedSidebar = ({ authors, recentPosts }: { authors: any[], recentPo
 
       <Separator className="bg-border/60" />
 
-      {/* Recent Feed Section - Prominent Heading & Compact Rows */}
+      {/* Recent Feed Section */}
       <section>
         <div className="flex items-end justify-between mb-8">
           <div className="space-y-1">

@@ -32,42 +32,40 @@
 :root {
   --radius: 0.5rem;
   
-  /* Light Mode - Minimalist Gallery White */
-  --background: #ffffff;
-  --foreground: #080808;
+  --background: #fafafa;
+  --foreground: #0a0a0a;
   
-  --primary: #080808;
-  --primary-foreground: #ffffff;
+  --primary: #0a0a0a;
+  --primary-foreground: #fafafa;
   
-  --secondary: #f4f4f5;
-  --secondary-foreground: #080808;
+  --secondary: #f0f0f2;
+  --secondary-foreground: #0a0a0a;
   
-  --muted: #f4f4f5;
-  --muted-foreground: #71717a;
+  --muted: #f0f0f2;
+  --muted-foreground: #52525b;
   
-  --accent: #f4f4f5;
-  --accent-foreground: #080808;
+  --accent: #ebebee;
+  --accent-foreground: #0a0a0a;
   
-  --border: #e4e4e7;
-  --input: #e4e4e7;
-  --ring: #a1a1aa;
+  --border: #e2e2e5;
+  --input: #e2e2e5;
+  --ring: #18181b;
 }
 
 .dark {
-  /* Dark Mode - Signature #080808 */
   --background: #080808;
   --foreground: #fafafa;
   
   --primary: #fafafa;
   --primary-foreground: #080808;
   
-  --secondary: #18181b;
+  --secondary: #121214;
   --secondary-foreground: #fafafa;
   
-  --muted: #18181b;
+  --muted: #121214;
   --muted-foreground: #a1a1aa;
   
-  --accent: #27272a;
+  --accent: #1c1c1f;
   --accent-foreground: #fafafa;
   
   --border: #1f1f23;
@@ -80,6 +78,30 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground transition-colors duration-300;
+    @apply bg-background text-foreground transition-colors duration-300 antialiased;
   }
+}
+
+.bn-root, .bn-editor {
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.bn-editor {
+  padding: 2rem !important; 
+  min-height: 400px;
+}
+
+.bn-suggestion-menu {
+  background-color: var(--secondary) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1) !important;
+}
+
+.dark .bn-suggestion-menu {
+  background-color: #0a0a0a !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important;
 }

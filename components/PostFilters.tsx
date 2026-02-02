@@ -55,7 +55,7 @@ export const PostFilters = ({
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search archive..."
-          className="pl-10 bg-secondary/30 border-border focus-visible:ring-1 focus-visible:ring-foreground text-xs font-regular tracking-[0.2em] h-8 rounded-lg placeholder:text-muted-foreground/50"
+          className="pl-10 bg-secondary/30 border-border focus-visible:ring-1 focus-visible:ring-foreground text-xs font-regular  h-8 rounded-lg placeholder:text-muted-foreground/50"
         />
       </div>
     </div>

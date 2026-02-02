@@ -7,11 +7,25 @@ import { ArrowLeft, Clock } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { urlFor } from "@/sanity/lib/image";
+import { DeletePostButton } from "@/components/view/DeleteButton";
+import { auth } from "@clerk/nextjs/server";
 
 const ptComponents = {
   block: {
+    h1: ({ children }: any) => (
+      <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mt-20 mb-8 text-foreground leading-none">
+        {children}
+      </h1>
+    ),
     h2: ({ children }: any) => (
-      <h2 className="text-3xl font-bold mt-16 mb-6 tracking-tight text-foreground">{children}</h2>
+      <h2 className="text-3xl font-bold mt-16 mb-6 tracking-tight text-foreground uppercase">
+        {children}
+      </h2>
+    ),
+    h3: ({ children }: any) => (
+      <h3 className="text-xl font-bold mt-12 mb-4 tracking-tight text-foreground uppercase">
+        {children}
+      </h3>
     ),
     normal: ({ children }: any) => (
       <p className="text-muted-foreground text-lg leading-relaxed mb-8 font-light selection:bg-foreground selection:text-background">
@@ -41,7 +55,11 @@ const ptComponents = {
     number: ({ children }: any) => <li className="pl-2">{children}</li>,
   },
   marks: {
-    underline: ({ children }: any) => <span className="underline decoration-primary/50 underline-offset-4">{children}</span>,
+    underline: ({ children }: any) => (
+      <span className="underline decoration-primary/50 underline-offset-4">
+        {children}
+      </span>
+    ),
   },
   types: {
     image: ({ value }: any) => {
@@ -61,6 +79,8 @@ const ptComponents = {
 };
 
 export default async function PostPage({ params }: { params: { slug: string } }) {
+  const { userId } = await auth();
+
   const { data: post } = await sanityFetch({ 
     query: postBySlugQuery, 
     params 
@@ -68,6 +88,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
 
   if (!post) return <div className="text-foreground p-20 bg-background font-sans">Story not found.</div>;
 
+  const isOwner = userId && post.author?._id === `author-${userId}`;
   return (
     <div className="min-h-screen bg-background text-foreground font-sans">
       <article className="max-w-[900px] mx-auto px-6 py-20">
@@ -99,7 +120,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
         </header>
 
         {/* HERO IMAGE */}
-        <div className="aspect-[21/9] rounded-xl overflow-hidden mb-20 bg-secondary relative border border-border">
+        <div className="aspect-21/9 rounded-xl overflow-hidden mb-20 bg-secondary relative border border-border">
           <Image 
             src={post.mainImage} 
             alt={post.title} 
@@ -136,6 +157,8 @@ export default async function PostPage({ params }: { params: { slug: string } })
                 <Clock className="h-4 w-4" />
                 <span className="text-[10px] font-bold tracking-widest uppercase">8 Min Read</span>
               </div>
+          
+              {isOwner && <DeletePostButton postId={post._id} />}
             </div>
           </aside>
 

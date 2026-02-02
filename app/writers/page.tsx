@@ -1,7 +1,6 @@
-// app/writers/page.tsx
 import { client } from "@/sanity/lib/client";
 import { authorsQuery } from "@/sanity/lib/queries";
-import WritersClient from "./WritersClient"; // We will create this next
+import WritersClient from "./WritersClient"; 
 
 export default async function Page() {
   // Fetch authors on the server

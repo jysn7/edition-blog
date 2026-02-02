@@ -45,7 +45,7 @@ export default function WritersClient({ initialAuthors = [] }: { initialAuthors:
             </span>
           </div>
           <span className="text-[10px] font-bold text-muted-foreground/50 tabular-nums">
-            {filteredAuthors.length}/{initialAuthors.length} INDEXED
+            {filteredAuthors.length}/{initialAuthors.length} Results
           </span>
         </div>
 
@@ -96,7 +96,6 @@ export default function WritersClient({ initialAuthors = [] }: { initialAuthors:
                       </div>
                     </div>
 
-                    {/* Button is now a child of the main Link - no internal Link here to prevent <a> in <a> */}
                     <Button 
                       variant="outline" 
                       size="sm" 

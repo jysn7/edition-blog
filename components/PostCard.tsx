@@ -4,7 +4,7 @@ import Image from "next/image";
 export const PostCard = ({ post }: { post: any }) => {
   // date formatd
   const formattedDate = post.publishedAt 
-    ? new Date(post.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }).toUpperCase()
+    ? new Date(post.publishedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric' }).toUpperCase()
     : "RECENT";
 
   return (

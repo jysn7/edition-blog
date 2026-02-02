@@ -17,6 +17,7 @@ const postFields = groq`
     "image": image.asset->url
   },
   "categories": categories[]->{
+    _id,
     title,
     "slug": slug.current,
     color
@@ -57,9 +58,10 @@ export const postBySlugQuery = groq`
   }
 `;
 
-// 4. Fetch all categories (for the sidebar/filter)
+// 4. Fetch all categories (for the sidebar/filter and form selects)
 export const categoriesQuery = groq`
-  *[_type == "category"] {
+  *[_type == "category"] | order(title asc) {
+    _id,
     title,
     "slug": slug.current,
     color
