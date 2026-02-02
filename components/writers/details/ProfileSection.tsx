@@ -8,7 +8,7 @@ import { CalendarDays, Link as LinkIcon, Settings2, X, Loader2 } from "lucide-re
 import { useAuth } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { updateAuthor } from "@/app/api/updateAuthor/route";
+import { updateAuthor } from "@/lib/actions";
 
 export function ProfileSection({ author }: { author: any }) {
   const { userId } = useAuth();

@@ -2,11 +2,11 @@ import { client } from "@/sanity/lib/client";
 import { authorBySlugQuery } from "@/sanity/lib/queries";
 import { notFound } from "next/navigation";
 
-import { HeaderNav } from "@/components/writers/details/HeaderNav";
-import { ProfileBanner } from "@/components/writers/details/ProfileBanner";
-import { ProfileSection } from "@/components/writers/details/ProfileSection";
-import { PostsTabBar } from "@/components/writers/details/PostsTabBar";
-import { PostsGrid } from "@/components/writers/details/PostsGrid";
+import { HeaderNav } from "@/components/authors/details/HeaderNav";
+import { ProfileBanner } from "@/components/authors/details/ProfileBanner";
+import { ProfileSection } from "@/components/authors/details/ProfileSection";
+import { PostsTabBar } from "@/components/authors/details/PostsTabBar";
+import { PostsGrid } from "@/components/authors/details/PostsGrid";
 
 export default async function AuthorProfilePage({
   params,

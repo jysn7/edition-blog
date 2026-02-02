@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { Trash2, Loader2, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { deletePost } from "@/app/api/delete/route";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -17,6 +16,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { deletePost } from "@/lib/actions";
 
 export function DeletePostButton({ postId }: { postId: string }) {
   const [isPending, setIsPending] = useState(false);

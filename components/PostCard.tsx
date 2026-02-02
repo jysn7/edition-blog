@@ -8,7 +8,7 @@ export const PostCard = ({ post }: { post: any }) => {
     : "RECENT";
 
   return (
-    <Link href={`/${post.slug}`} className="group block">
+    <Link href={`/posts/${post.slug}`} className="group block">
       <article className="cursor-pointer">
         <div className="relative overflow-hidden rounded-lg mb-6 aspect-square bg-secondary">
           {post.mainImage ? (

@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useState, ChangeEvent, useEffect } from "react";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
-import { createPost } from "../api/create/route";
 import { client } from "@/sanity/lib/client";
 import { categoriesQuery } from "@/sanity/lib/queries";
 
@@ -14,6 +13,7 @@ import ImageUpload from "@/components/create/ImageUpload";
 import PostMetaFields from "@/components/create/PostMetaFields";
 import PostContentField from "@/components/create/PostContentField";
 import FormFooter from "@/components/create/FormFooter";
+import { createPost } from "@/lib/actions";
 
 export default function CreatePostPage() {
   const { user, isLoaded } = useUser();

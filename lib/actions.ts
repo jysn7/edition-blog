@@ -3,7 +3,6 @@
 import { createClient } from "next-sanity";
 import { revalidatePath } from "next/cache";
 
-// initialize the Admin Client
 const adminClient = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
@@ -12,23 +11,17 @@ const adminClient = createClient({
   token: process.env.SANITY_WRITE_TOKEN,
 });
 
-/**
- * BRIDGE: Transforms BlockNote's specific JSON structure into 
- * Sanity's standard Portable Text (Block Content).
- */
 function transformToPortableText(rawJson: string) {
   try {
     const blocks = JSON.parse(rawJson);
-    
     return blocks.map((block: any) => {
       if (block.type === "image") {
         return {
           _type: "image",
           _key: block.id,
-          assetUrl: block.props?.url, 
+          assetUrl: block.props?.url,
         };
       }
-
       if (block.type === "heading") {
         return {
           _type: "block",
@@ -46,7 +39,6 @@ function transformToPortableText(rawJson: string) {
           })),
         };
       }
-
       if (block.type === "bulletListItem" || block.type === "numberedListItem") {
         return {
           _type: "block",
@@ -65,8 +57,6 @@ function transformToPortableText(rawJson: string) {
           })),
         };
       }
-
-      // DEFAULT PARAGRAPH: The catch-all for standard text
       return {
         _type: "block",
         _key: block.id,
@@ -90,15 +80,13 @@ function transformToPortableText(rawJson: string) {
   }
 }
 
-
 export async function createPost(formData: FormData, userId: string) {
-  // Extract fields from the form
   const title = formData.get("title") as string;
-  const rawContent = formData.get("content") as string; 
+  const rawContent = formData.get("content") as string;
   const excerpt = formData.get("excerpt") as string;
   const imageFile = formData.get("image") as File;
+  const categoryId = formData.get("category") as string;
 
-  // Basic validation
   if (!title || !rawContent) {
     return { error: "Title and Content are required." };
   }
@@ -109,13 +97,10 @@ export async function createPost(formData: FormData, userId: string) {
     if (imageFile && imageFile.size > 0) {
       const arrayBuffer = await imageFile.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
-      
       mainImageAsset = await adminClient.assets.upload('image', buffer, {
         filename: `main-${Date.now()}-${imageFile.name}`,
-        contentType: imageFile.type, 
+        contentType: imageFile.type,
       });
-
-      console.log("Main image successfully uploaded to Sanity:", mainImageAsset._id);
     }
 
     const bodyBlocks = transformToPortableText(rawContent);
@@ -135,6 +120,13 @@ export async function createPost(formData: FormData, userId: string) {
         _type: "reference",
         _ref: `author-${userId}`,
       },
+      categories: categoryId ? [
+        {
+          _key: Math.random().toString(36).substring(7),
+          _type: "reference",
+          _ref: categoryId,
+        }
+      ] : [],
       mainImage: mainImageAsset ? {
         _type: 'image',
         asset: {
@@ -152,5 +144,50 @@ export async function createPost(formData: FormData, userId: string) {
   } catch (err) {
     console.error("Sanity Write Error:", err);
     return { error: "Failed to publish post to Sanity." };
+  }
+}
+
+export async function deletePost(postId: string) {
+  try {
+    await adminClient.delete(postId);
+    revalidatePath("/");
+    return { success: true };
+  } catch (err) {
+    console.error("Sanity Deletion Error:", err);
+    return { error: "Could not remove the post from the database." };
+  }
+}
+
+export async function updateAuthor(authorId: string, data: any) {
+  try {
+    const { name, socialHandle, bioText } = data;
+
+    await adminClient
+      .patch(authorId)
+      .set({
+        name: name,
+        socialHandle: socialHandle,
+        bio: [
+          {
+            _key: `bio-${Date.now()}`,
+            _type: 'block',
+            children: [
+              {
+                _key: `span-${Date.now()}`,
+                _type: 'span',
+                text: bioText,
+              },
+            ],
+            style: 'normal',
+          },
+        ],
+      })
+      .commit();
+
+    revalidatePath(`/`);
+    return { success: true };
+  } catch (error) {
+    console.error("Sanity Update Error:", error);
+    return { success: false };
   }
 }

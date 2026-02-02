@@ -42,7 +42,7 @@ export const Navbar = () => {
             <Link
               key={item}
               href={`/${item.toLowerCase()}`}
-              className="relative py-1 text-muted-foreground hover:text-foreground transition-colors group"
+              className="relative py-1 cursor-pointer text-muted-foreground hover:text-foreground transition-colors group"
             >
               {item}
               <span className="absolute bottom-0 left-0 w-0 h-px bg-foreground transition-all duration-300 group-hover:w-full" />
@@ -58,7 +58,7 @@ export const Navbar = () => {
               <Link href="/new">
                 <Button
                   variant="default"
-                  className="rounded-full h-8 px-4 text-[9px] uppercase font-bold tracking-[0.15em] flex items-center gap-1.5 hover:scale-105 transition-transform"
+                  className="rounded-full cursor-pointer h-8 px-4 text-[9px] uppercase font-bold tracking-[0.15em] flex items-center gap-1.5 hover:scale-105 transition-transform"
                 >
                   <Plus className="h-3 w-3 stroke-3" />
                   New Post
@@ -79,7 +79,7 @@ export const Navbar = () => {
               <SignInButton mode="modal">
                 <Button
                   variant="ghost"
-                  className="rounded-full h-8 px-4 text-[9px] uppercase font-black tracking-[0.15em] hover:bg-secondary/50"
+                  className="rounded-full border-2 cursor-pointer border-border/70  h-8 px-4 text-[9px] uppercase font-black tracking-[0.15em] hover:bg-secondary/50"
                 >
                   Login
                 </Button>
@@ -142,7 +142,7 @@ export const Navbar = () => {
 
                   <SignedOut>
                     <SignInButton mode="modal">
-                      <Button variant="outline" className="w-full rounded-none h-12 text-xs uppercase font-black tracking-widest">
+                      <Button variant="outline" className="w-full rounded-lg h-12 text-xs uppercase font-black tracking-widest">
                         Sign In
                       </Button>
                     </SignInButton>

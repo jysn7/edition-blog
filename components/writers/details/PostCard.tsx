@@ -7,7 +7,7 @@ import { Separator } from "@/components/ui/separator";
 export function PostCard({ post, authorName }: any) {
   return (
     <div className="group">
-      <Link href={`/${post.slug}`} className="no-underline">
+      <Link href={`/posts/${post.slug}`} className="no-underline">
         <Card className="border-none bg-transparent hover:bg-secondary/40 transition-colors cursor-pointer rounded-xl">
           <CardContent className="p-4 flex gap-4">
             
