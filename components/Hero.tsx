@@ -35,7 +35,7 @@ export const Hero = ({ posts }: { posts: any[] }) => {
         <div className="flex">
           {posts.map((post) => (
             <div className="flex-[0_0_100%] min-w-0" key={post._id}>
-              <Link href={`/${post.slug}`} className="block group/slide">
+              <Link href={`/posts/${post.slug}`} className="block group/slide">
                 <div className="relative aspect-video mb-8 overflow-hidden rounded-lg bg-secondary">
                   {post.mainImage && (
                     <Image
