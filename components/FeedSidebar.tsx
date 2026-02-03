@@ -55,7 +55,7 @@ export const FeedSidebar = ({ authors, recentPosts }: { authors: any[], recentPo
         <div className="space-y-4">
           {recentPosts.map((post) => (
             <Link 
-              href={`/${post.slug}`} 
+              href={`/posts/${post.slug}`} 
               key={post._id} 
               className="group flex items-center gap-4 no-underline p-2 -mx-2 hover:bg-secondary/30 rounded-md transition-all"
             >
