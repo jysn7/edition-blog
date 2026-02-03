@@ -38,7 +38,7 @@ export const postType = defineType({
       name: 'mainImage',
       title: 'Main Image',
       type: 'image',
-      options: { hotspot: true }, // Crucial for your editorial crops
+      options: { hotspot: true }, 
       fields: [
         {
           name: 'alt',
@@ -81,19 +81,19 @@ export const postType = defineType({
     }),
   ],
 
-  // This ensures your Studio list looks like a professional CMS
   preview: {
     select: {
       title: 'title',
       author: 'author.name',
       media: 'mainImage',
       featured: 'featured',
+      likes: 'likes', 
     },
     prepare(selection) {
-      const { author, featured } = selection
+      const { author, featured, likes } = selection
       return {
         ...selection,
-        subtitle: `${featured ? '⭐ Featured' : ''} ${author ? 'by ' + author : ''}`,
+        subtitle: `${featured ? '⭐ ' : ''}  ${author ? 'by ' + author : ''}`,
       }
     },
   },

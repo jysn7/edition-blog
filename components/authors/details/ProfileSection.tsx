@@ -40,11 +40,11 @@ export function ProfileSection({ author }: { author: any }) {
       
       {/* EDIT TOGGLE */}
       {isOwner && (
-        <div className="absolute top-4 right-6">
+        <div className="absolute bottom-0 mx-auto md:top-4 md:right-6">
           <Button 
             variant="ghost" 
             onClick={() => setIsEditing(!isEditing)}
-            className="text-[10px] font-bold uppercase tracking-widest gap-2 opacity-50 hover:opacity-100"
+            className="text-[10px] font-bold border-2 border-border/60 uppercase tracking-widest gap-2 opacity-50 hover:opacity-100"
           >
             {isEditing ? <><X className="h-3 w-3" /> Cancel</> : <><Settings2 className="h-3 w-3" /> Edit Profile</>}
           </Button>

@@ -84,3 +84,12 @@ export const authorBySlugQuery = groq`
     }
   }
 `;
+
+export const relatedPostsQuery = `*[_type == "post" && references($categoryId) && _id != $postId][0...3] {
+  title,
+  "slug": slug.current,
+  mainImage,
+  publishedAt,
+  excerpt,
+  "author": author->{name, image}
+}`;

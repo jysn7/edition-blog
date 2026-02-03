@@ -137,6 +137,7 @@ export async function createPost(formData: FormData, userId: string) {
       excerpt: excerpt || "New entry published to the archive.",
       publishedAt: new Date().toISOString(),
       body: bodyBlocks,
+      likes: 0,
     });
 
     revalidatePath("/");
