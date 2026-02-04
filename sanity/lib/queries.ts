@@ -1,6 +1,6 @@
 import { groq } from "next-sanity";
 
-// Fragment for reusable Post fields
+// Fragment for reusable posts
 const postFields = groq`
   _id,
   title,
@@ -21,10 +21,18 @@ const postFields = groq`
     title,
     "slug": slug.current,
     color
-  }
+  },
+  "reactionCounts": {
+    "heart": count(*[_type == "reaction" && post._ref == ^._id && reaction == "heart"]),
+    "thumbsUp": count(*[_type == "reaction" && post._ref == ^._id && reaction == "thumbsUp"]),
+    "insight": count(*[_type == "reaction" && post._ref == ^._id && reaction == "insight"]),
+    "rocket": count(*[_type == "reaction" && post._ref == ^._id && reaction == "rocket"]),
+    "eyes": count(*[_type == "reaction" && post._ref == ^._id && reaction == "eyes"])
+  },
+  "userReaction": *[_type == "reaction" && post._ref == ^._id && user == $userId][0].reaction
 `;
 
-// Fragment for detailed Author fields
+// Fragment for detailed author
 const authorFields = groq`
   _id,
   name,
@@ -36,21 +44,21 @@ const authorFields = groq`
   "postCount": count(*[_type == "post" && author._ref == ^._id])
 `;
 
-// 1. Fetch all posts for the feed (ordered by date)
+// Fetch all posts for the feed (ordered by date)
 export const postsQuery = groq`
   *[_type == "post"] | order(publishedAt desc) {
     ${postFields}
   }
 `;
 
-// 2. Fetch only the Featured post for the Hero section
+// fetch only the Featured post for the Hero section
 export const featuredPostQuery = groq`
   *[_type == "post" && featured == true][0] {
     ${postFields}
   }
 `;
 
-// 3. Fetch a single post by slug
+// Fetch single post by slug
 export const postBySlugQuery = groq`
   *[_type == "post" && slug.current == $slug][0] {
     ${postFields},
@@ -58,7 +66,7 @@ export const postBySlugQuery = groq`
   }
 `;
 
-// 4. Fetch all categories (for the sidebar/filter and form selects)
+// Fetch all categories (for the sidebar/filter and form selects)
 export const categoriesQuery = groq`
   *[_type == "category"] | order(title asc) {
     _id,
@@ -68,14 +76,14 @@ export const categoriesQuery = groq`
   }
 `;
 
-// 5. Fetch all authors for the Writers Directory
+// Fetvh all authors for the Writers Directory
 export const authorsQuery = groq`
   *[_type == "author"] | order(name asc) {
     ${authorFields}
   }
 `;
 
-// 6. Fetch a single author by slug (for profile pages)
+// Fetch a single author by slug (for profile pages)
 export const authorBySlugQuery = groq`
   *[_type == "author" && slug.current == $slug][0] {
     ${authorFields},

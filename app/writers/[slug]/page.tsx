@@ -1,6 +1,7 @@
 import { client } from "@/sanity/lib/client";
 import { authorBySlugQuery } from "@/sanity/lib/queries";
 import { notFound } from "next/navigation";
+import { auth } from "@clerk/nextjs/server";
 
 import { HeaderNav } from "@/components/authors/details/HeaderNav";
 import { ProfileBanner } from "@/components/authors/details/ProfileBanner";
@@ -13,8 +14,13 @@ export default async function AuthorProfilePage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
+  const { userId } = await auth();
   const { slug } = await params;
-  const author = await client.fetch(authorBySlugQuery, { slug });
+  
+  const author = await client.fetch(authorBySlugQuery, { 
+    slug,
+    userId: userId || null 
+  });
 
   if (!author) notFound();
 
@@ -25,7 +31,6 @@ export default async function AuthorProfilePage({
       <main className="max-w-[1600px] mx-auto border-x border-border min-h-screen">
         <ProfileBanner />
         <ProfileSection author={author} />
-        {/* <PostsTabBar /> */}
         <PostsGrid posts={author.posts} authorName={author.name} />
       </main>
     </div>

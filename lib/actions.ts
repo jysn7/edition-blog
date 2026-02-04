@@ -192,3 +192,40 @@ export async function updateAuthor(authorId: string, data: any) {
     return { success: false };
   }
 }
+
+export async function toggleReaction(postId: string, userId: string, reactionType: string) {
+  if (!postId || !userId || !reactionType) {
+    return { error: "Missing required reaction data." };
+  }
+
+  try {
+    // Check for existing reaction by this user on this post for this type
+    const existingReaction = await adminClient.fetch(
+      `*[_type == "reaction" && post._ref == $postId && user == $userId && reaction == $reactionType][0]`,
+      { postId, userId, reactionType }
+    );
+
+    if (existingReaction) {
+      // Unlike/Un-react: Delete document
+      await adminClient.delete(existingReaction._id);
+    } else {
+      // Like/React: Create new document
+      await adminClient.create({
+        _type: "reaction",
+        user: userId,
+        post: {
+          _type: "reference",
+          _ref: postId,
+        },
+        reaction: reactionType,
+      });
+    }
+
+    revalidatePath(`/posts/[slug]`, "page");
+    revalidatePath("/");
+    return { success: true };
+  } catch (err) {
+    console.error("Reaction Error:", err);
+    return { error: "Failed to process reaction." };
+  }
+}

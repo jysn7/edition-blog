@@ -43,7 +43,7 @@ export const Sidebar = () => {
           Global Network
         </h4>
         <p className="text-xs text-muted-foreground leading-relaxed uppercase tracking-wide mb-6">
-          Join 50+ readers receiving weekly curated insights into the future of creative technology.
+          Join 50+ readers receiving weekly curated insights into the future of creative technology, pop culture and cinema.
         </p>
 
         {/* <form className="flex gap-2 border-b border-border pb-2 focus-within:border-foreground transition-colors">

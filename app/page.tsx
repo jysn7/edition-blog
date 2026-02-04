@@ -1,14 +1,18 @@
 import { sanityFetch } from '@/sanity/lib/live';
 import BlogClient from './BlogClient';
 import { postsQuery } from '@/sanity/lib/queries';
+import { auth } from "@clerk/nextjs/server"; // Import auth
 
-// 1. Force dynamic rendering so Next.js doesn't serve a stale HTML file
 export const dynamic = 'force-dynamic';
 
 export default async function Home() {
-  // 2. Use 'published' perspective to ensure you see the latest live data
+  const { userId } = await auth();
+
   const { data: posts } = await sanityFetch({ 
     query: postsQuery,
+    params: { 
+      userId: userId || null 
+    },
     perspective: 'published' 
   });
 

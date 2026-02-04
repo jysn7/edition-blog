@@ -42,10 +42,22 @@ export function PostAuthorSidebar({ post, isOwner }: any) {
             5 Min Read
           </span>
         </div>
+        
+        <PostActions 
+          slug={post.slug.current || post.slug} 
+          postId={post._id}
+          reactionData={{
+            heartCount: post.reactionCounts?.heart || 0,
+            thumbsUpCount: post.reactionCounts?.thumbsUp || 0,
+            insightCount: post.reactionCounts?.insight || 0,
+            rocketCount: post.reactionCounts?.rocket || 0,
+            eyesCount: post.reactionCounts?.eyes || 0,
+            userReaction: post.userReaction // This comes from the GROQ query
+          }}
+        />
 
         {isOwner && <DeletePostButton postId={post._id} />}
 
-        <PostActions slug={post.slug} />
       </div>
     </aside>
   );
